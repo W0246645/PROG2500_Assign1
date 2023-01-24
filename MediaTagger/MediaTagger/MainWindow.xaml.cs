@@ -54,7 +54,7 @@ namespace MediaTagger
                 var year = currentFile.Tag.Year;
                 var title = currentFile.Tag.Title;
 
-                tagNameBox.Text = title + " : " + year
+                tagNameBox.Text = title + " : " + year;
             }
         }
     }

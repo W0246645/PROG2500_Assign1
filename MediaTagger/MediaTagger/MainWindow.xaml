@@ -7,6 +7,27 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <StackPanel>
+        <DockPanel Dock="Top">
+            <Menu>
+                <MenuItem Header="File">
+                    <MenuItem Header="_Open" Click="OpenFile_Click"/>
+                    <MenuItem Header="Tag Current MP3"/>
+                    <Separator />
+                    <MenuItem Header="_Exit"/>
+                </MenuItem>
+                <MenuItem Header="Edit">
+                    <MenuItem Header="_Copy"></MenuItem>
+                    <MenuItem Header="_Cut"></MenuItem>
+                    <MenuItem Header="_Paste"></MenuItem>
+                </MenuItem>
+                <MenuItem Header="Media">
+                    <MenuItem Header="Play"></MenuItem>
+                    <MenuItem Header="Pause"></MenuItem>
+                    <MenuItem Header="Stop"></MenuItem>
+                </MenuItem>
+            </Menu>
+        </DockPanel>
+        
         <Button Content="Open MP3 File" FontSize="32" Margin="10" Click="OpenFile_Click"></Button>
         <TextBlock x:Name="fileNameBox" FontSize="32"></TextBlock>
         <MediaElement x:Name="myMediaPlayer" LoadedBehavior="Manual" UnloadedBehavior="Manual"></MediaElement>

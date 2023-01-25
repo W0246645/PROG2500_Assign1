@@ -8,7 +8,27 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="images\edit.png" />
+    <None Remove="images\media-play.png" />
+    <None Remove="images\musicnote.png" />
+    <None Remove="images\open_file.png" />
+    <None Remove="images\pause-icon.png" />
+    <None Remove="images\stop-icon.png" />
+    <None Remove="images\textured.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="TagLibSharp" Version="2.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="images\edit.png" />
+    <Resource Include="images\media-play.png" />
+    <Resource Include="images\musicnote.png" />
+    <Resource Include="images\open_file.png" />
+    <Resource Include="images\pause-icon.png" />
+    <Resource Include="images\stop-icon.png" />
+    <Resource Include="images\textured.jpg" />
   </ItemGroup>
 
 </Project>

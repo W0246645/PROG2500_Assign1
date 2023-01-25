@@ -5,13 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MediaTagger"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="600" Width="500" ResizeMode="NoResize">
     <StackPanel>
+        <MediaElement x:Name="myMediaPlayer" LoadedBehavior="Manual" UnloadedBehavior="Manual"></MediaElement>
         <DockPanel Dock="Top">
             <Menu>
                 <MenuItem Header="File">
                     <MenuItem Header="_Open" Click="OpenFile_Click"/>
-                    <MenuItem Header="Tag Current MP3"/>
+                    <MenuItem x:Name="tagButton" Header="Tag Current MP3" Click="ShowTags_Click" IsEnabled="False"/>
                     <Separator />
                     <MenuItem Header="_Exit"/>
                 </MenuItem>
@@ -21,17 +22,30 @@
                     <MenuItem Header="_Paste"></MenuItem>
                 </MenuItem>
                 <MenuItem Header="Media">
-                    <MenuItem Header="Play"></MenuItem>
-                    <MenuItem Header="Pause"></MenuItem>
-                    <MenuItem Header="Stop"></MenuItem>
+                    <MenuItem x:Name="menuPlayButton" Header="Play" IsEnabled="False" Click="playButton_Click"></MenuItem>
+                    <MenuItem x:Name="menuPauseButton" Header="Pause" IsEnabled="False" Click="pauseButton_Click"></MenuItem>
+                    <MenuItem x:Name="menuStopButton" Header="Stop" IsEnabled="False" Click="stopButton_Click"></MenuItem>
                 </MenuItem>
             </Menu>
         </DockPanel>
-        
-        <Button Content="Open MP3 File" FontSize="32" Margin="10" Click="OpenFile_Click"></Button>
-        <TextBlock x:Name="fileNameBox" FontSize="32"></TextBlock>
-        <MediaElement x:Name="myMediaPlayer" LoadedBehavior="Manual" UnloadedBehavior="Manual"></MediaElement>
-        <Button Content="Show Tags" FontSize="32" Margin="10" Click="ShowTags_Click"></Button>
-        <TextBlock x:Name="tagNameBox" FontSize="32"></TextBlock>
+        <Image x:Name="albumImage" Height="500" Width="500" Panel.ZIndex="-3"/>
+        <StackPanel Orientation="Horizontal">
+            <Button x:Name="playButton" Height="40" Width="40" IsEnabled="False" Click="playButton_Click">
+                <Image Source="/images/media-play.png"></Image>
+            </Button>
+            <Button x:Name="pauseButton" Height="40" Width="40" IsEnabled="False" Click="pauseButton_Click">
+                <Image Source="/images/pause-icon.png"/>
+            </Button>
+            <Button x:Name="stopButton" Height="40" Width="40" IsEnabled="False" Click="stopButton_Click">
+                <Image Source="/images/stop-icon.png"></Image>
+            </Button>
+            <TextBlock x:Name="timer">00:00:00</TextBlock>
+            <Slider x:Name="seekBar" Height="40" Width="300"/>
+        </StackPanel>
+        <StackPanel x:Name="infoPanel" Height="75" Margin="0,-158,0,0" Background="Black" Opacity="0.5">
+            <TextBlock x:Name="infoTitle" Foreground="White" FontSize="20" TextAlignment="Right">Title</TextBlock>
+            <TextBlock x:Name="infoArtist" Foreground="White" FontSize="18" TextAlignment="Right">Artist</TextBlock>
+            <TextBlock x:Name="infoAlbum" Foreground="White" FontSize="14" TextAlignment="Right">Album (Year)</TextBlock>
+        </StackPanel>
     </StackPanel>
 </Window>

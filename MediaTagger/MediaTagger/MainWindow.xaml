@@ -42,6 +42,14 @@
             <TextBlock x:Name="timer">00:00:00</TextBlock>
             <Slider x:Name="seekBar" Height="40" Width="300"/>
         </StackPanel>
+        <StackPanel x:Name="tagEditorPanel" Height="200" Margin="0,-650,0,0" Background="Black" Opacity="0.5" Visibility="Hidden">
+            <TextBlock Foreground="White" FontSize="30" TextAlignment="Center">Tag Editor</TextBlock>
+            <TextBox x:Name="editTitle" Foreground="White" FontSize="16" Margin="5,10,5,0" TextAlignment="Left" Background="#FF383838">Title</TextBox>
+            <TextBox x:Name="editArtist" Foreground="White" FontSize="16" Margin="5,0,5,0" TextAlignment="Left" Background="#FF383838" IsEnabled="False">Artist</TextBox>
+            <TextBox x:Name="editAlbum" Foreground="White" FontSize="16" Margin="5,0,5,0" TextAlignment="Left" Background="#FF383838">Album</TextBox>
+            <TextBox x:Name="editYear" Foreground="White" FontSize="16" Margin="5,0,5,10" TextAlignment="Left" Background="#FF383838">Year</TextBox>
+            <Button x:Name="editSave" Click="SaveTags_Click" Content="Save" FontSize="20" Width="100" Height="40" FontWeight="Bold" Background="White" Foreground="Black"></Button>
+        </StackPanel>
         <StackPanel x:Name="infoPanel" Height="75" Margin="0,-158,0,0" Background="Black" Opacity="0.5">
             <TextBlock x:Name="infoTitle" Foreground="White" FontSize="20" TextAlignment="Right">Title</TextBlock>
             <TextBlock x:Name="infoArtist" Foreground="White" FontSize="18" TextAlignment="Right">Artist</TextBlock>

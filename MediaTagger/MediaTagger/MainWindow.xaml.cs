@@ -72,7 +72,7 @@ namespace MediaTagger
                 ShowAlbumArt();
 
                 infoTitle.Text = currentFile.Tag.Title;
-                infoArtist.Text = currentFile.Tag.Artists.Any() ? currentFile.Tag.Artists[0] : "Unknown Artist.";
+                infoArtist.Text = currentFile.Tag.Performers.Any() ? currentFile.Tag.Performers[0] : "Unknown Artist.";
                 infoAlbum.Text = currentFile.Tag.Album + " (" + currentFile.Tag.Year + ")"; 
             }
         }
@@ -82,9 +82,33 @@ namespace MediaTagger
             //Examples of reading tag data from currently selected file
             if (currentFile != null)
             {
-                var year = currentFile.Tag.Year;
-                var title = currentFile.Tag.Title;
+                editYear.Text = currentFile.Tag.Year.ToString();
+                editTitle.Text = currentFile.Tag.Title;
+                editArtist.Text = currentFile.Tag.Performers[0];
+                editAlbum.Text = currentFile.Tag.Album;
+
+                tagEditorPanel.Visibility = Visibility.Visible;
+                infoPanel.Visibility = Visibility.Hidden;
             }
+        }
+
+        private void SaveTags_Click(object sender, RoutedEventArgs e)
+        {
+            currentFile.Tag.Year = (uint)int.Parse(editYear.Text);
+            currentFile.Tag.Title = editTitle.Text;
+            currentFile.Tag.Album= editAlbum.Text;
+
+            myMediaPlayer.Stop();
+            var fileName = myMediaPlayer.Source;
+            var position = myMediaPlayer.Position;
+            myMediaPlayer.Source = null;
+            currentFile.Save();
+            myMediaPlayer.Source = fileName;
+            myMediaPlayer.Position = position;
+            myMediaPlayer.Play();
+
+            tagEditorPanel.Visibility = Visibility.Hidden;
+            infoPanel.Visibility = Visibility.Visible;
         }
 
         private void playButton_Click(object sender, RoutedEventArgs e)

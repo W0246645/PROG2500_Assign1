@@ -39,7 +39,7 @@
             <Button x:Name="stopButton" Height="40" Width="40" IsEnabled="False" Click="stopButton_Click">
                 <Image Source="/images/stop-icon.png"></Image>
             </Button>
-            <TextBlock x:Name="timer">00:00:00</TextBlock>
+            <TextBlock x:Name="timerTextBlock">00:00:00</TextBlock>
             <Slider x:Name="seekBar" Height="40" Width="300"/>
         </StackPanel>
         <StackPanel x:Name="tagEditorPanel" Height="200" Margin="0,-650,0,0" Background="Black" Opacity="0.5" Visibility="Hidden">

@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace MediaTagger
 {
@@ -24,6 +26,8 @@ namespace MediaTagger
     public partial class MainWindow : Window
     {
         TagLib.File currentFile;
+        string fileName;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -48,6 +52,13 @@ namespace MediaTagger
             }
         }
 
+        private void SetInfo()
+        {
+            infoTitle.Text = currentFile.Tag.Title;
+            infoArtist.Text = currentFile.Tag.Performers.Any() ? currentFile.Tag.Performers[0] : "Unknown Artist.";
+            infoAlbum.Text = currentFile.Tag.Album + " (" + currentFile.Tag.Year + ")";
+        }
+
         private void OpenFile_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog fileDlg = new OpenFileDialog();
@@ -57,10 +68,12 @@ namespace MediaTagger
             //By default it returns ture if the user selects a file and hits open.
             if (fileDlg.ShowDialog() == true)
             {
+                fileName = fileDlg.FileName;
                 //Create tag lib file object, for accessing mp3 meta data.
-                currentFile = TagLib.File.Create(fileDlg.FileName);
+                currentFile = TagLib.File.Create(fileName);
+                currentFile.Dispose();
 
-                myMediaPlayer.Source = new Uri(fileDlg.FileName);
+                myMediaPlayer.Source = new Uri(fileName);
                 myMediaPlayer.Play();
 
                 tagButton.IsEnabled = true;
@@ -70,10 +83,8 @@ namespace MediaTagger
                 stopButton.IsEnabled = true;
 
                 ShowAlbumArt();
-
-                infoTitle.Text = currentFile.Tag.Title;
-                infoArtist.Text = currentFile.Tag.Performers.Any() ? currentFile.Tag.Performers[0] : "Unknown Artist.";
-                infoAlbum.Text = currentFile.Tag.Album + " (" + currentFile.Tag.Year + ")"; 
+                SetInfo();
+                
             }
         }
 
@@ -98,17 +109,25 @@ namespace MediaTagger
             currentFile.Tag.Title = editTitle.Text;
             currentFile.Tag.Album= editAlbum.Text;
 
-            myMediaPlayer.Stop();
-            var fileName = myMediaPlayer.Source;
             var position = myMediaPlayer.Position;
+            myMediaPlayer.Stop();
             myMediaPlayer.Source = null;
+            Thread.Sleep(50);//The thread was setting null and saving too quicky causing an overlap and crashing. Sleep for 50ms to give a buffer.
             currentFile.Save();
-            myMediaPlayer.Source = fileName;
-            myMediaPlayer.Position = position;
+            currentFile.Dispose();
+            myMediaPlayer.Source = new Uri(fileName);
             myMediaPlayer.Play();
+            myMediaPlayer.Position = position;
+            if (playButton.IsEnabled) //Set song mode back to what it was before the save.
+            {
+                myMediaPlayer.Pause();
+            }
+
+            
 
             tagEditorPanel.Visibility = Visibility.Hidden;
             infoPanel.Visibility = Visibility.Visible;
+            SetInfo();
         }
 
         private void playButton_Click(object sender, RoutedEventArgs e)
@@ -140,6 +159,18 @@ namespace MediaTagger
             menuStopButton.IsEnabled = false;
             pauseButton.IsEnabled = false;
             menuPauseButton.IsEnabled = false;
+        }
+
+        // When the media opens, initialize the "Seek To" slider maximum value
+        // to the total number of miliseconds in the length of the media clip.
+        private void Element_MediaOpened(object sender, EventArgs e)
+        {
+            timelineSlider.Maximum = myMediaElement.NaturalDuration.TimeSpan.TotalMilliseconds;
+        }
+
+        private void MediaTimeChanged(object sender, EventArgs e)
+        {
+            timelineSlider.Value = myMediaElement.Position.TotalMilliseconds;
         }
     }
 }

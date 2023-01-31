@@ -27,6 +27,8 @@ namespace MediaTagger
     {
         TagLib.File currentFile;
         string fileName;
+        DispatcherTimer timer;
+        bool isSeeking = false;
 
         public MainWindow()
         {
@@ -76,6 +78,13 @@ namespace MediaTagger
                 myMediaPlayer.Source = new Uri(fileName);
                 myMediaPlayer.Play();
 
+                
+                timer = new DispatcherTimer();
+                timer.Interval = TimeSpan.FromMilliseconds(300);
+                timer.Tick += TimerTick;
+                timer.Start();
+
+
                 tagButton.IsEnabled = true;
                 menuPauseButton.IsEnabled = true;
                 pauseButton.IsEnabled = true;
@@ -84,7 +93,17 @@ namespace MediaTagger
 
                 ShowAlbumArt();
                 SetInfo();
-                
+            }
+        }
+
+        private void TimerTick(object? sender, EventArgs e)
+        {
+            if ((myMediaPlayer.Source != null) && (myMediaPlayer.NaturalDuration.HasTimeSpan) && (!isSeeking))
+            {
+                seekBar.Minimum = 0;
+                seekBar.Maximum = myMediaPlayer.NaturalDuration.TimeSpan.TotalMilliseconds;
+                seekBar.Value = myMediaPlayer.Position.TotalMilliseconds;
+                timerTextBlock.Text = TimeSpan.FromMilliseconds(seekBar.Value).ToString(@"hh\:mm\:ss");
             }
         }
 
@@ -163,14 +182,22 @@ namespace MediaTagger
 
         // When the media opens, initialize the "Seek To" slider maximum value
         // to the total number of miliseconds in the length of the media clip.
-        private void Element_MediaOpened(object sender, EventArgs e)
+        private void SeekToMediaPosition(object sender, EventArgs e)
         {
-            timelineSlider.Maximum = myMediaElement.NaturalDuration.TimeSpan.TotalMilliseconds;
+            int sliderValue = (int)seekBar.Value;
+
+            TimeSpan ts = new TimeSpan(0, 0, 0, 0, sliderValue);
+            myMediaPlayer.Position = ts;
         }
 
-        private void MediaTimeChanged(object sender, EventArgs e)
+        private void CanExecuteCloseCommand(object sender, CanExecuteRoutedEventArgs e)
         {
-            timelineSlider.Value = myMediaElement.Position.TotalMilliseconds;
+            e.CanExecute = true;
+        }
+
+        private void ExecutedCloseCommand(object sender, ExecutedRoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

@@ -6,20 +6,25 @@
         xmlns:local="clr-namespace:MediaTagger"
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="500" ResizeMode="NoResize">
+    <Window.CommandBindings>
+        <CommandBinding Command="{x:Static ApplicationCommands.Close}"
+                    Executed="ExecutedCloseCommand"
+                    CanExecute="CanExecuteCloseCommand" />
+    </Window.CommandBindings> <!--https://stackoverflow.com/questions/61781777/why-is-the-wpf-applicationcommands-close-command-disabled-on-the-button-and-in-t-->
     <StackPanel>
-        <MediaElement x:Name="myMediaPlayer" LoadedBehavior="Manual" UnloadedBehavior="Manual"></MediaElement>
+        <MediaElement x:Name="myMediaPlayer" LoadedBehavior="Manual" UnloadedBehavior="Stop"></MediaElement>
         <DockPanel Dock="Top">
             <Menu>
                 <MenuItem Header="File">
                     <MenuItem Header="_Open" Click="OpenFile_Click"/>
                     <MenuItem x:Name="tagButton" Header="Tag Current MP3" Click="ShowTags_Click" IsEnabled="False"/>
                     <Separator />
-                    <MenuItem Header="_Exit"/>
+                    <MenuItem Header="_Exit" Command="{x:Static ApplicationCommands.Close}"/>
                 </MenuItem>
                 <MenuItem Header="Edit">
-                    <MenuItem Header="_Copy"></MenuItem>
-                    <MenuItem Header="_Cut"></MenuItem>
-                    <MenuItem Header="_Paste"></MenuItem>
+                    <MenuItem Header="_Copy" Command="ApplicationCommands.Copy"></MenuItem>
+                    <MenuItem Header="_Cut" Command="ApplicationCommands.Cut"></MenuItem>
+                    <MenuItem Header="_Paste" Command="ApplicationCommands.Paste"></MenuItem>
                 </MenuItem>
                 <MenuItem Header="Media">
                     <MenuItem x:Name="menuPlayButton" Header="Play" IsEnabled="False" Click="playButton_Click"></MenuItem>
@@ -40,7 +45,7 @@
                 <Image Source="/images/stop-icon.png"></Image>
             </Button>
             <TextBlock x:Name="timerTextBlock">00:00:00</TextBlock>
-            <Slider x:Name="seekBar" Height="40" Width="300"/>
+            <Slider x:Name="seekBar" Height="40" Width="300" ValueChanged="SeekToMediaPosition"/>
         </StackPanel>
         <StackPanel x:Name="tagEditorPanel" Height="200" Margin="0,-650,0,0" Background="Black" Opacity="0.5" Visibility="Hidden">
             <TextBlock Foreground="White" FontSize="30" TextAlignment="Center">Tag Editor</TextBlock>

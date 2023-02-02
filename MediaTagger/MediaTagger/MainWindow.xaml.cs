@@ -56,9 +56,9 @@ namespace MediaTagger
 
         private void SetInfo()
         {
-            infoTitle.Text = currentFile.Tag.Title;
-            infoArtist.Text = currentFile.Tag.Performers.Any() ? currentFile.Tag.Performers[0] : "Unknown Artist.";
-            infoAlbum.Text = currentFile.Tag.Album + " (" + currentFile.Tag.Year + ")";
+            infoPanel.infoTitle.Text = currentFile.Tag.Title;
+            infoPanel.infoArtist.Text = currentFile.Tag.Performers.Any() ? currentFile.Tag.Performers[0] : "Unknown Artist.";
+            infoPanel.infoAlbum.Text = currentFile.Tag.Album + " (" + currentFile.Tag.Year + ")";
         }
 
         private void OpenFile_Click(object sender, RoutedEventArgs e)

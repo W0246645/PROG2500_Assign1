@@ -7,10 +7,14 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="500" ResizeMode="NoResize">
     <Window.CommandBindings>
-        <CommandBinding Command="{x:Static ApplicationCommands.Close}"
+        <!--https://stackoverflow.com/questions/61781777/why-is-the-wpf-applicationcommands-close-command-disabled-on-the-button-and-in-t-->
+        <CommandBinding Command="{x:Static ApplicationCommands.Close}" 
                     Executed="ExecutedCloseCommand"
                     CanExecute="CanExecuteCloseCommand" />
-    </Window.CommandBindings> <!--https://stackoverflow.com/questions/61781777/why-is-the-wpf-applicationcommands-close-command-disabled-on-the-button-and-in-t-->
+        <CommandBinding Command="MediaCommands.Play" CanExecute="Play_CanExecute" Executed="Play_Executed"/>
+        <CommandBinding Command="MediaCommands.Pause" CanExecute="Pause_CanExecute" Executed="Pause_Executed"/>
+        <CommandBinding Command="MediaCommands.Stop" CanExecute="Stop_CanExecute" Executed="Stop_Executed"/>
+    </Window.CommandBindings>
     <StackPanel>
         <MediaElement x:Name="myMediaPlayer" LoadedBehavior="Manual" UnloadedBehavior="Stop"></MediaElement>
         <DockPanel Dock="Top">
@@ -27,26 +31,33 @@
                     <MenuItem Header="_Paste" Command="ApplicationCommands.Paste"></MenuItem>
                 </MenuItem>
                 <MenuItem Header="Media">
-                    <MenuItem x:Name="menuPlayButton" Header="Play" IsEnabled="False" Click="playButton_Click"></MenuItem>
-                    <MenuItem x:Name="menuPauseButton" Header="Pause" IsEnabled="False" Click="pauseButton_Click"></MenuItem>
-                    <MenuItem x:Name="menuStopButton" Header="Stop" IsEnabled="False" Click="stopButton_Click"></MenuItem>
+                    <MenuItem x:Name="menuPlayButton" Header="Play" Command="MediaCommands.Play"></MenuItem>
+                    <MenuItem x:Name="menuPauseButton" Header="Pause" Command="MediaCommands.Pause"></MenuItem>
+                    <MenuItem x:Name="menuStopButton" Header="Stop" Command="MediaCommands.Stop"></MenuItem>
                 </MenuItem>
             </Menu>
         </DockPanel>
         <Image x:Name="albumImage" Height="500" Width="500" Panel.ZIndex="-3"/>
-        <StackPanel Orientation="Horizontal">
-            <Button x:Name="playButton" Height="40" Width="40" IsEnabled="False" Click="playButton_Click">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="playButton" Grid.Column="0" Height="40" Width="40" Command="MediaCommands.Play">
                 <Image Source="/images/media-play.png"></Image>
             </Button>
-            <Button x:Name="pauseButton" Height="40" Width="40" IsEnabled="False" Click="pauseButton_Click">
+            <Button x:Name="pauseButton" Grid.Column="1" Height="40" Width="40" Command="MediaCommands.Pause">
                 <Image Source="/images/pause-icon.png"/>
             </Button>
-            <Button x:Name="stopButton" Height="40" Width="40" IsEnabled="False" Click="stopButton_Click">
+            <Button x:Name="stopButton" Grid.Column="2" Height="40" Width="40" Command="MediaCommands.Stop">
                 <Image Source="/images/stop-icon.png"></Image>
             </Button>
-            <TextBlock x:Name="timerTextBlock">00:00:00</TextBlock>
-            <Slider x:Name="seekBar" Height="40" Width="300" ValueChanged="SeekToMediaPosition"/>
-        </StackPanel>
+            <TextBlock x:Name="timerTextBlock" Grid.Column="3" Margin="10,0,0,0" VerticalAlignment="Center">00:00:00</TextBlock>
+            <Slider x:Name="seekBar" Height="20" Width="300" Grid.Column="4" ValueChanged="SeekToMediaPosition" VerticalAlignment="Center" Margin="10,0,0,0"/>
+        </Grid>
         <StackPanel x:Name="tagEditorPanel" Height="200" Margin="0,-650,0,0" Background="Black" Opacity="0.5" Visibility="Hidden">
             <TextBlock Foreground="White" FontSize="30" TextAlignment="Center">Tag Editor</TextBlock>
             <TextBox x:Name="editTitle" Foreground="White" FontSize="16" Margin="5,10,5,0" TextAlignment="Left" Background="#FF383838">Title</TextBox>
@@ -55,6 +66,6 @@
             <TextBox x:Name="editYear" Foreground="White" FontSize="16" Margin="5,0,5,10" TextAlignment="Left" Background="#FF383838">Year</TextBox>
             <Button x:Name="editSave" Click="SaveTags_Click" Content="Save" FontSize="20" Width="100" Height="40" FontWeight="Bold" Background="White" Foreground="Black"></Button>
         </StackPanel>
-        <local:NowPlaying x:Name="infoPanel" Margin="0,-158,0,0" />
+        <local:NowPlaying x:Name="infoPanel" Margin="0,-158,0,0"/>
     </StackPanel>
 </Window>
